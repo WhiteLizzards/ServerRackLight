@@ -54,20 +54,13 @@ void setup() {
 
 void loop() {
   Read_Frequencies();
-
-  if (Frequencies_One[0] >=500){
+  
+  if (Frequencies_One[0] >=400){
     for (int i = 0; i < NUMPIXELS; i++){
         pixels.setPixelColor(i, pixels.Color(252,0,15));
         //pixels.setPixelColor(i, pixels.Color((int)random(0,100),(int)random(0,20),(int)random(0,100)));
     }
   }
-  else if (Frequencies_One[6] >=400){
-    for (int i = 0; i < NUMPIXELS; i++){
-        //pixels.setPixelColor(i, pixels.Color(0,0,140));
-        //pixels.setPixelColor(i, pixels.Color(252,0,15));
-    }
-  }
-  
   
   else {
     for (int i = 0; i < NUMPIXELS; i++){

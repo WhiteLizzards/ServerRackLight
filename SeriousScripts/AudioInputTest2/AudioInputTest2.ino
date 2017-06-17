@@ -1,12 +1,12 @@
 /*
-  AudioInputTest by WhiteLizards
+  AudioInputTest2 by WhiteLizards
 
-  Erstes Script, welches die LEDs auf ein Audio Signal regieren lässt
+  EQ Effekt im LED Schlauch
 */
 // Library für die LED Stripe Programmierung
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
-  #include <avr/power.h>
+#include <avr/power.h>
 #endif
 #define PIN 6
 #define NUMPIXELS 50
@@ -17,28 +17,33 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 #define STROBE 4
 #define RESET 5
 #define DC_One A0
-#define DC_Two A1 
+#define DC_Two A1
 
 #define FILTER_FREQUENCY (222)
 
 const int ledPin = 6;
-
 int freq_amp;
 int Frequencies_One[7];
 int Frequencies_Two[7];
 
-int buttonState = LOW;
-int lastState = LOW;
-int realInput;
+int audioInput;
 
 unsigned long delayval = 100;
 unsigned long previousMillis = 0;
 unsigned long currentMillis;
 boolean triggered = false;
-int i = 0;
+boolean triggeredLast = false;
 
-
+int minVolume = 200;
 int multiplePosition[NUMPIXELS];
+
+// Arrays mit Volumegrenzen für EQ Effekt
+int calm[] = {20, 40, 60, 80, 100};
+//int loud[] = {80, 150, 200, 280, 300};
+int loud[] = {60, 100, 110, 120, 130, 140, 150, 160, 170, 180};
+int loud2[] = {160, 200, 250, 300, 350, 400, 450, 500, 550, 600}; //Laptop 2/3 lautstärke
+int loud3[] = {160, 210, 270, 330, 380, 440, 490, 550, 610, 660};
+
 
 void setup() {
 
@@ -47,12 +52,12 @@ void setup() {
   pinMode(RESET, OUTPUT);
   pinMode(DC_One, INPUT);
   pinMode(DC_Two, INPUT);
-  pinMode(ledPin, OUTPUT);  
+  pinMode(ledPin, OUTPUT);
   digitalWrite(STROBE, HIGH);
   digitalWrite(RESET, HIGH);
 
   pixels.begin(); // This initializes the NeoPixel library.
-  
+
   //Initialize Spectrum Analyzers
   digitalWrite(STROBE, LOW);
   delay(1);
@@ -65,24 +70,106 @@ void setup() {
   digitalWrite(RESET, LOW);
   Serial.begin(9600);
 
-  for(int i = 0; i < NUMPIXELS; ++i){
-      multiplePosition[i] = 0;  
-  }
-  
-}
-
-int real_input(){
-   return Frequencies_One[0]; // 0 - 1024
-}
-
-int filter_frequency(int input, int by){
-  if(input < by){
-     return input;
+  for (int i = 0; i < NUMPIXELS; ++i) {
+    multiplePosition[i] = 0;
   }
 
-  return -1;
 }
 
+void loop() {
+  Read_Frequencies();
+  Show_EQ(loud3);
+  Print_Frequencies(0);
+}
+
+// Methods
+// Shows the EQ on the LED stripe
+void Show_EQ(int arr[]) {
+  audioInput = Read_Input(0);
+
+  if (audioInput >= arr[0]) {
+    if (audioInput >= arr[1]) {
+      if (audioInput >= arr[2]) {
+        if (audioInput >= arr[3]) {
+          if (audioInput >= arr[4]) {
+            if (audioInput >= arr[5]) {
+              if (audioInput >= arr[6]) {
+                if (audioInput >= arr[7]) {
+                  if (audioInput >= arr[8]) {
+                    if (audioInput >= arr[9]) {
+                      for (int i = 0; i < 50; i++) {
+                        pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+                      }
+                    }
+                    else {
+                      for (int i = 0; i < 45; i++) {
+                        pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+                      }
+                    }
+                  }
+                  else {
+                    for (int i = 0; i < 40; i++) {
+                      pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+                    }
+                  }
+                }
+                else {
+                  for (int i = 0; i < 35; i++) {
+                    pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+                  }
+                }
+              }
+              else {
+                for (int i = 0; i < 30; i++) {
+                  pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+                }
+              }
+            }
+            else {
+              for (int i = 0; i < 25; i++) {
+                pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+              }
+            }
+            
+          }
+          else {
+            for (int i = 0; i < 20; i++) {
+              pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+            }
+          }
+          
+        }
+        else {
+          for (int i = 0; i < 15; i++) {
+            pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+          }
+        }
+      }
+      else {
+        for (int i = 0; i < 10; i++) {
+          pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+        }
+      }
+
+    }
+
+    else {
+      for (int i = 0; i < 5; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+      }
+    }
+  }
+  else {
+    for (int i = 0; i < 50; i++) {
+      pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+    }
+  }
+  pixels.show();
+}
+
+
+
+// Reads in the Audio Signals and saves them into Frequencies_One
 void Read_Frequencies() {
   // Read frequencies for each band
   for (freq_amp = 0; freq_amp < 7; freq_amp++) {
@@ -92,144 +179,45 @@ void Read_Frequencies() {
     digitalWrite(STROBE, LOW);
   }
 }
-
-void loop() {
-  
-    Read_Frequencies();
-    realInput = real_input(); // / 255; 
-    
-    int filter = 200;
-
-    currentMillis = millis();
-
-    if (realInput >= filter) {
-      triggered = true;
-    }
-    else {
-      triggered = false;
-    }
-    
-    previousMillis = currentMillis;
-    
-    if (triggered) {
-      if ((currentMillis - previousMillis) % delayval == 0) { 
-
-        
-        for(int j = 0; j < NUMPIXELS; ++j){
-          //i = j;
-
-          pixels.setPixelColor(i, pixels.Color(0, realInput%255, 0));
-          if (i!=0) 
-            pixels.setPixelColor(i-1, pixels.Color(0,0,0));
-            
-          pixels.show();
-          if (i == NUMPIXELS) {
-              i = 0;
-          }
-          delay(0);
-          i++;
-        }
-        
-      }
-    }
-        
-        
-        
-    
-
-    /*
-    if (real_input >= filter) {
-      
-      for (int i = 0; i < NUMPIXELS; i++) {
-        pixels.setPixelColor(i, pixels.Color(0, realInput%255, 0));
-        
-      }
-      
-    } else {
-      
-      for (int i = 0; i < NUMPIXELS; i++) {
-        pixels.setPixelColor(i, pixels.Color(0, 0, 0));
-        
-      }
-      
-    }
-    */
-   
-    
-
-  Serial.print("real_input() ");
-  Serial.println(realInput);
-  Serial.print("Filter Real ");
-  Serial.println(filter_frequency(realInput, FILTER_FREQUENCY));
-
-}
-
-/*
-void loop() {
-  Read_Frequencies();
-
-  if (Frequencies_One[0] >=200){
-    buttonState == HIGH;
+// Returns a specific Frequency
+int Read_Input(int i) {
+  if (i >= 0 && i < 7) {
+    return Frequencies_One[i]; // 0 - 1024
   }
   else {
-    buttonState == LOW;
+    return Frequencies_One[0];
   }
-  
-  if (buttonState != lastState){
-    Serial.println(lastState);
-    lastState = buttonState;
-    }
-    for ( int i=0;i<NUMPIXELS;i++){ //schaue in allen Positionen nach // check all Pos
-        
-        if (multiplePosition[i]>0){ 
-          
-          if (buttonState == HIGH){
-             
-            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,255,0)); //gib an die aktuelle Position-1 eine Farbe
-            //lastState2 = buttonState2;
-          }
-          
-          if (multiplePosition[i]>1) 
-            pixels.setPixelColor(multiplePosition[i]-2, pixels.Color(0,0,0)); //stelle die Position -2 auf schwarz, aber nur dann wenn es nicht das erste Pixel ist
-          multiplePosition[i] = multiplePosition[i]+1;
-          if(multiplePosition[i]>NUMPIXELS+1) 
-            multiplePosition[i]=0;
-        }
-    }
-    
-    if (buttonState == HIGH) {
-          int fired = 0; // Variable um zu schauen ob schon ausgelöst wurde
-          for (int i = 0; i < NUMPIXELS; i++) { //alle positionen durchlaufen und eine finden die noch 0 ist und nicht gestartet wurde
-            if (multiplePosition[i] == 0) {
-              if (fired==0) { //nur dann noch eins auslösen, wennn noch keins ausgelöst wurde
-                multiplePosition[i] = multiplePosition[i]+1; //auslösen
-                fired = 1; //verhindern das noch eins ausgelöst wurde.
-              }
-            } 
-          }
-          
-    }
-  pixels.show();
-  delay(100);
-
-  
-  
-
-
-
-  //Serial.println(Frequencies_One[0]);
-  //Serial.println(Frequencies_One[1]);
-  //Serial.println(Frequencies_One[2]);
-  //Serial.println(Frequencies_One[3]);
-  //Serial.println(Frequencies_One[4]);
-  //Serial.println(Frequencies_One[5]);
-  //Serial.println(Frequencies_One[6]);
-  //Graph_Frequencies();
- 
-
 }
-*/
 
+// Prints out realInput
+void Print_Frequencies(int i) {
+  audioInput = Read_Input(i);
+  Serial.print("Frequency: ");
+  Serial.println(audioInput);
+}
 
-
+/* Rekursive Funktion FAIL
+void Send_EQ_Light(int iterator, int arrLimit, int ledLimit) {
+    if (iterator > arrLimit) return;
+    Send_EQ_Light(iterator+1, arrLimit, ledLimit+5);
+    if (audioInput >= loud[iterator]) {
+      for (int i = 0; i < ledLimit; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+      }
+    }
+    else {
+      for (int i = 0; i < ledLimit-5; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+      }
+    }
+    if (iterator == 0) {
+      if (audioInput < loud[iterator]) {
+        for (int i = 0; i < ledLimit; i++) {
+          pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+        }
+      }
+    }
+    return;
+  }
+  */
 

@@ -63,43 +63,37 @@ void loop() {
  
   if (buttonState != lastState){
     lastState = buttonState;
+  }
+  for ( int i=0;i<MAXPOSITIONS;i++){ //schaue in allen Positionen nach
+    if (multiplePosition[i]>0) {
+      if (buttonState2 == HIGH) {
+         
+        pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,0,255)); //gib an die aktuelle Position-1 eine Farbe
+        //lastState2 = buttonState2;
+      }
+      else {
+        pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,255,0)); //gib an die aktuelle Position-1 eine Farbe
+        //lastState2 = buttonState2;
+      }
+      if (multiplePosition[i]>1) pixels.setPixelColor(multiplePosition[i]-2, pixels.Color(0,0,0)); //stelle die Position -2 auf schwarz, aber nur dann wenn es nicht das erste Pixel ist
+      multiplePosition[i] = multiplePosition[i]+1;
+      if(multiplePosition[i]>NUMPIXELS+1) multiplePosition[i]=0;
     }
-    for ( int i=0;i<MAXPOSITIONS;i++){ //schaue in allen Positionen nach
-        
-        if (multiplePosition[i]>0){
-          
-          if (buttonState2 == HIGH) {
-             
-            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,0,255)); //gib an die aktuelle Position-1 eine Farbe
-            //lastState2 = buttonState2;
-          }
-          else {
-             
-            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,255,0)); //gib an die aktuelle Position-1 eine Farbe
-            //lastState2 = buttonState2;
-          }
-          
-          if (multiplePosition[i]>1) pixels.setPixelColor(multiplePosition[i]-2, pixels.Color(0,0,0)); //stelle die Position -2 auf schwarz, aber nur dann wenn es nicht das erste Pixel ist
-          multiplePosition[i] = multiplePosition[i]+1;
-          if(multiplePosition[i]>NUMPIXELS+1) multiplePosition[i]=0;
+  }
+  if (buttonState == HIGH) {
+    int fired = 0; // Variable um zu schauen ob schon ausgelöst wurde
+    for (int i = 0; i < MAXPOSITIONS; i++) { //alle positionen durchlaufen und eine finden die noch 0 ist und nicht gestartet wurde
+      if (multiplePosition[i] == 0) {
+        if (fired==0) { //nur dann noch eins auslösen, wennn noch keins ausgelöst wurde
+          multiplePosition[i] = multiplePosition[i]+1; //auslösen
+          fired = 1; //verhindern das noch eins ausgelöst wurde.
         }
+      } 
     }
-    if (buttonState == HIGH) {
-          int fired = 0; // Variable um zu schauen ob schon ausgelöst wurde
-          for (int i = 0; i < MAXPOSITIONS; i++) { //alle positionen durchlaufen und eine finden die noch 0 ist und nicht gestartet wurde
-            if (multiplePosition[i] == 0) {
-              if (fired==0) { //nur dann noch eins auslösen, wennn noch keins ausgelöst wurde
-                multiplePosition[i] = multiplePosition[i]+1; //auslösen
-                fired = 1; //verhindern das noch eins ausgelöst wurde.
-              }
-            } 
-          }
-          
-    }
-    
-    // turn LED off:
-    pixels.show();
-    delay(newDelayTime);
+  }
+  // turn LED off:
+  pixels.show();
+  delay(newDelayTime);
 
 
 }
