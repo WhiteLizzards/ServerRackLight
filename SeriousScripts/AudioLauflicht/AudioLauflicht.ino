@@ -42,6 +42,15 @@ const int ledPin =  6;      // the number of the LED pin
 #define PIN            6
 #define PIN2            5
 
+// Declare Spectrum Shield pin connections
+#define STROBE 4
+#define RESET 5
+#define DC_One A0
+#define DC_Two A1
+
+int freq_amp;
+int Frequencies_One[7];
+int Frequencies_Two[7];
 
 
 // How many NeoPixels are attached to the Arduino?
@@ -59,22 +68,49 @@ int buttonState2 = 0;
 
 int lastState = 0;
 int lastState2 = 0;
+int pos=0;
+#define MAXPOSITIONS 101 // eins mehr als gebraucht damit letzte aus geht
+int multiplePosition[MAXPOSITIONS];
+
 void setup() {
+
+  //Set Spectrum Shield pin configurations
+  pinMode(STROBE, OUTPUT);
+  pinMode(RESET, OUTPUT);
+  pinMode(DC_One, INPUT);
+  pinMode(DC_Two, INPUT);
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(STROBE, HIGH);
+  digitalWrite(RESET, HIGH);
+  
   // initialize the LED pin as an output:
   pinMode(ledPin, OUTPUT);
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT);
   pinMode(buttonPin2, INPUT);
+  //Initialize Spectrum Analyzers
+  digitalWrite(STROBE, LOW);
+  delay(1);
+  digitalWrite(RESET, HIGH);
+  delay(1);
+  digitalWrite(STROBE, HIGH);
+  delay(1);
+  digitalWrite(STROBE, LOW);
+  delay(1);
+  digitalWrite(RESET, LOW);
   Serial.begin(9600);
+  pixels.begin(); // This initializes the NeoPixel library.
 }
 
-int pos=0;
-#define MAXPOSITIONS 101 // eins mehr als gebraucht damit letzte aus geht
-int multiplePosition[MAXPOSITIONS];
-
 void loop() {
+  bool triggerd= false;
+  bool snare = false;
+  Read_Frequencies();
+  if (Frequencies_One[0]>200)triggerd =HIGH;
+  
+
+  Serial.println("freq_0: "+(String)Frequencies_One[0]);
   // read the state of the pushbutton value:
-  buttonState = digitalRead(buttonPin);
   buttonState2 = digitalRead(buttonPin2);
   
   
@@ -83,9 +119,9 @@ void loop() {
   // if it is, the buttonState is HIGH:
  
 
-  if (buttonState != lastState){
+  if (triggerd != lastState){
 
-    lastState = buttonState;
+    lastState = triggerd;
     }
     for ( int i=0;i<MAXPOSITIONS;i++){ //schaue in allen Positionen nach
         
@@ -107,7 +143,7 @@ void loop() {
           if(multiplePosition[i]>NUMPIXELS+1) multiplePosition[i]=0;
         }
     }
-    if (buttonState == HIGH) {
+    if (triggerd == HIGH) {
           int fired = 0; // Variable um zu schauen ob schon ausgelöst wurde
           for (int i = 0; i < MAXPOSITIONS; i++) { //alle positionen durchlaufen und eine finden die noch 0 ist und nicht gestartet wurde
             if (multiplePosition[i] == 0) {
@@ -126,4 +162,15 @@ void loop() {
     delay(40);
 
 
+}
+
+// Reads in the Audio Signals and saves them into Frequencies_One
+void Read_Frequencies() {
+  // Read frequencies for each band
+  for (freq_amp = 0; freq_amp < 7; freq_amp++) {
+    Frequencies_One[freq_amp] = analogRead(DC_One);
+    Frequencies_Two[freq_amp] = analogRead(DC_Two);
+    digitalWrite(STROBE, HIGH);
+    digitalWrite(STROBE, LOW);
+  }
 }
