@@ -101,15 +101,24 @@ void setup() {
   Serial.begin(9600);
   pixels.begin(); // This initializes the NeoPixel library.
 }
-
+int limit=0;
 void loop() {
+  
   bool triggerd= false;
   bool snare = false;
   Read_Frequencies();
-  if (Frequencies_One[0]>200)triggerd =HIGH;
   
+  if (Frequencies_One[0]>200){
+    if (limit>4){
+      triggerd =HIGH;
+      limit=0;
+      }
+    else limit++;
+    }
+  
+  if (Frequencies_One[3]>300)snare =HIGH;
 
-  Serial.println("freq_0: "+(String)Frequencies_One[0]);
+  Serial.println("freq: "+(String)Frequencies_One[3]);
   // read the state of the pushbutton value:
   buttonState2 = digitalRead(buttonPin2);
   
@@ -127,14 +136,14 @@ void loop() {
         
         if (multiplePosition[i]>0){
           
-          if (buttonState2 == HIGH) {
+          if (snare == HIGH) {
              
-            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,0,255)); //gib an die aktuelle Position-1 eine Farbe
+            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(255,255,255)); //gib an die aktuelle Position-1 eine Farbe
             //lastState2 = buttonState2;
           }
           else {
              
-            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,255,0)); //gib an die aktuelle Position-1 eine Farbe
+            pixels.setPixelColor(multiplePosition[i]-1, pixels.Color(0,0,255)); //gib an die aktuelle Position-1 eine Farbe
             //lastState2 = buttonState2;
           }
           
@@ -159,7 +168,7 @@ void loop() {
     // turn LED off:
 
     pixels.show();
-    delay(40);
+    delay(50);
 
 
 }
