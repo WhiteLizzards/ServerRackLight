@@ -118,12 +118,12 @@ void loop() {
   
   if (Frequencies_One[3]>300)snare =HIGH;
 
-  Serial.println("freq: "+(String)Frequencies_One[3]);
+  Serial.println("freq: "+(String)Frequencies_One[0]);
   // read the state of the pushbutton value:
   buttonState2 = digitalRead(buttonPin2);
   
   
-  Serial.println(buttonState2);
+  //Serial.println(buttonState2);
   // check if the pushbutton is pressed.
   // if it is, the buttonState is HIGH:
  
@@ -182,4 +182,5 @@ void Read_Frequencies() {
     digitalWrite(STROBE, HIGH);
     digitalWrite(STROBE, LOW);
   }
+  
 }
