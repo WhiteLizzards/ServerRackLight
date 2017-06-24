@@ -27,6 +27,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
+#include <Wire.h>
 
 // constants won't change. They're used here to
 // set pin numbers:
@@ -47,6 +48,7 @@ const int ledPin =  6;      // the number of the LED pin
 #define RESET 5
 #define DC_One A0
 #define DC_Two A1
+
 
 int freq_amp;
 int Frequencies_One[7];
@@ -98,6 +100,7 @@ void setup() {
   digitalWrite(RESET, LOW);
   //Serial.begin(9600);
     pinMode(PIN, OUTPUT);
+    Wire.begin(); 
   
 }
 int limit=0;
@@ -136,5 +139,8 @@ void Read_Frequencies() {
     digitalWrite(STROBE, HIGH);
     digitalWrite(STROBE, LOW);
   }
+  Wire.beginTransmission(8); // transmit to device #8
+  Wire.write(Frequencies_One,4);// sends five bytes
+     
 }
 

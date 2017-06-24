@@ -24,20 +24,24 @@ byte x = 0;
 
 void loop() {
 
-  for (int nodeAddress = START_NODE; nodeAddress <= NODE_MAX; nodeAddress++) {
-    Wire.requestFrom(nodeAddress, PAYLOAD_SIZE);
-    if(Wire.available() == PAYLOAD_SIZE) {
-    }
-  }
-  /*
+//  for (int nodeAddress = START_NODE; nodeAddress <= NODE_MAX; nodeAddress++) {
+//    Wire.requestFrom(nodeAddress, PAYLOAD_SIZE);
+//    if(Wire.available() == PAYLOAD_SIZE) {
+//    }
+//  }
+  
   Wire.beginTransmission(8); // transmit to device #8
   Wire.write("x is ");        // sends five bytes
   Wire.write(x);              // sends one byte
   Wire.endTransmission();    // stop transmitting
+  Wire.beginTransmission(7); // transmit to device #8
+  Wire.write("y is ");        // sends five bytes
+  Wire.write(x+5);              // sends one byte
+  Wire.endTransmission();    // stop transmitting
 
   x++;
   delay(500);
-  */
+  
 }
 
 
