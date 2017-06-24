@@ -7,48 +7,89 @@
 
 #include <Wire.h>
 
-#define PAYLOAD_SIZE 2        // how many bytes to expect from each I2C salve node
-#define NODE_MAX 2            // maximum number of slave nodes (I2C addresses) to probe
-#define START_NODE 2          // The starting I2C address of slave nodes
-#define NODE_READ_DELAY 1000  // Some delay between I2C node reads
+// Declare Spectrum Shield pin connections
+#define STROBE 4
+#define RESET 5
+#define DC_One A0
+#define DC_Two A1
 
-int nodePayload[PAYLOAD_SIZE];
+#define POTIPIN A2
+// Declare Frequencies Arrays
+int freq_amp;
+int Frequencies_One[7];
+int Frequencies_Two[7];
+
+// Declare Message variables to send to slaves
+String message = "";
+int bass = 0;
+int snare = 0;
+int poti = 0;
+
+// Declare Potentionmeter
+int potiPin = A0;
 
 void setup() {
+  /*
+  //Set Spectrum Shield pin configurations
+  pinMode(STROBE, OUTPUT);
+  pinMode(RESET, OUTPUT);
+  pinMode(DC_One, INPUT);
+  pinMode(DC_Two, INPUT);
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(STROBE, HIGH);
+  digitalWrite(RESET, HIGH);
+
+  //Initialize Spectrum Analyzers
+  digitalWrite(STROBE, LOW);
+  delay(1);
+  digitalWrite(RESET, HIGH);
+  delay(1);
+  digitalWrite(STROBE, HIGH);
+  delay(1);
+  digitalWrite(STROBE, LOW);
+  delay(1);
+  digitalWrite(RESET, LOW);
+  */
+  
   Serial.begin(9600);
-  PrintStartMessage();
   Wire.begin(); // join i2c bus (address optional for master)
 }
 
-byte x = 0;
 
 void loop() {
-
-  for (int nodeAddress = START_NODE; nodeAddress <= NODE_MAX; nodeAddress++) {
-    Wire.requestFrom(nodeAddress, PAYLOAD_SIZE);
-    if(Wire.available() == PAYLOAD_SIZE) {
-    }
-  }
-  /*
-  Wire.beginTransmission(8); // transmit to device #8
-  Wire.write("x is ");        // sends five bytes
-  Wire.write(x);              // sends one byte
-  Wire.endTransmission();    // stop transmitting
-
-  x++;
-  delay(500);
-  */
+  message = CreateMessage();
+  //Read_Frequencies();
+  SendMessageToDevice(7, message);
+  SendMessageToDevice(8, message);
+  delay(500); 
 }
 
 
+
 // Functions
-// Prints the Start Message
-void PrintStartMessage() {
-  Serial.println("MASTER READER NODE");
-  Serial.print("Maximum Slave Nodes: ");
-  Serial.println(NODE_MAX);
-  Serial.print("Payload size: ");
-  Serial.println(PAYLOAD_SIZE);
-  Serial.println("***********************");
+// Creates and return a string message with 3 random numbers
+String CreateMessage() {
+  bass = random(0, 1024);
+  snare = random(0, 1024);
+  poti = random(0, 1024);
+  return (String)bass + "," + (String)snare + "," +  (String)poti + "C";
+}
+
+// Reads in the Audio Signals and saves them into Frequencies_One
+void Read_Frequencies() {
+  // Read frequencies for each band
+  for (freq_amp = 0; freq_amp < 7; freq_amp++) {
+    Frequencies_One[freq_amp] = analogRead(DC_One);
+    Frequencies_Two[freq_amp] = analogRead(DC_Two);
+    digitalWrite(STROBE, HIGH);
+    digitalWrite(STROBE, LOW);
+  } 
+}
+
+// Sends a String message to specific device
+void SendMessageToDevice(int device, String msg) {
+  Wire.beginTransmission(device);
+  Wire.print(msg);
+  Wire.endTransmission();
 }
 
