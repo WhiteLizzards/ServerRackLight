@@ -10,7 +10,7 @@ const int i2c_adress =  6;      // die i2c Adress
 int lastState = 0;
 int lastState2 = 0;
 int pos=0;
-#define MAXPOSITIONS 100// eins mehr als gebraucht damit letzte aus geht
+#define MAXPOSITIONS 150// eins mehr als gebraucht damit letzte aus geht
 int multiplePosition[MAXPOSITIONS];
 
 String command="";
@@ -32,29 +32,23 @@ bool led=false;
 void loop() {
 
     for ( int i=MAXPOSITIONS-1;i>=0;i--){ //schaue in allen Positionen nach
-
-        if (leds[i][0]+leds[i][1]+leds[i][2]>0){
-          
-          
-          if (snare>400) {  
-               leds[i+1] = CRGB(255,255,255); 
-
-          }
-          else {  
-           leds[i+1] = CRGB(0,0,255); 
-          }
-          leds[i] = CRGB(0,0,0);
+      if (leds[i][0]+leds[i][1]+leds[i][2]>0){
+        if (snare>450) {  
+           leds[i+1] = CRGB(20,100,255); 
         }
+        else {  
+         leds[i+1] = CRGB(0,0,255); 
+        }
+        leds[i] = CRGB(0,0,0);
+      }
     }
     if (bass>500) {
       leds[0] = CRGB(0,0,255);
       triggerd=false;
-  
     }
-      
-  
+    
    FastLED.show();
-   delay(20);
+   delay(18);
 
 }
 void receiveEvent() {
