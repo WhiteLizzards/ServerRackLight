@@ -57,7 +57,7 @@ void setup() {
 
 
 void loop() {
-  message = CreateMessage();
+  message = CreateDummyMessage();
   //Read_Frequencies();
   SendMessageToDevice(7, message);
   SendMessageToDevice(8, message);
@@ -68,7 +68,7 @@ void loop() {
 
 // Functions
 // Creates and return a string message with 3 random numbers
-String CreateMessage() {
+String CreateDummyMessage() {
   bass = random(0, 1024);
   snare = random(0, 1024);
   poti = random(0, 1024);
