@@ -68,12 +68,11 @@ void loop() {
   else message = CreateBoolMessage();
 
   // Send Message to slave devices
-  Serial.println(snare);
-  if (bassTrigger) {
-    SendMessageToDevice(7, (String)snareTrigger);
-    SendMessageToDevice(8, message);
-  }
-  delay(100); 
+
+  SendMessageToDevice(6, message);
+  SendMessageToDevice(8, message);
+  Serial.println(bass);
+  delay(50); 
 }
 
 
@@ -100,9 +99,9 @@ String CreateLiveMessage() {
   if (snare >= potiSnare) snareTrigger = 1;
   else snareTrigger = 0;
   
-  //return (String)bass + "," + (String)snare + "," +  (String)potiBass + "," +  (String)potiSnare + "C";
+  return (String)bass + "," + (String)snare + "C";
   //return (String)snareTrigger;
-  return (String)bass + "C";
+  //return (String)bass + "C";
 }
 
 String CreateBoolMessage() {
