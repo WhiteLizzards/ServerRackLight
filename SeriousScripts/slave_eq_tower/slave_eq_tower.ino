@@ -26,7 +26,7 @@ int calm[] = {20, 40, 60, 80, 100};
 int loud[] = {60, 100, 110, 120, 130, 140, 150, 160, 170, 180};
 int loud2[] = {160, 200, 250, 300, 350, 400, 450, 500, 550, 600}; //Laptop 2/3 lautstärke
 int loud3[] = {160, 210, 270, 330, 380, 440, 490, 550, 610, 660};
-int loud4[] = {200, 260, 320, 380, 440, 500, 560, 620, 680, 740};
+int loud4[] = {500, 580, 680, 780, 880, 1000, 1000, 1000, 1000, 1000};
 
 
 void setup() {
@@ -150,7 +150,7 @@ void Show_EQ(int arr[]) {
                   if (bass >= arr[8]) {
                     if (bass >= arr[9]) {
                       for (int i = 0; i < 50; i++) {
-                        pixels[i].setRGB(0, 200, 0);
+                        pixels[i].setRGB(0, 0, 0);
                       }
                     }
                     else {
@@ -179,27 +179,27 @@ void Show_EQ(int arr[]) {
             }
             else {
               for (int i = 0; i < 25; i++) {
-                pixels[i].setRGB(0, 200, 0);
+                pixels[i].setRGB(140, 200, 0);
               }
             }
             
           }
           else {
             for (int i = 0; i < 20; i++) {
-              pixels[i].setRGB(0, 200, 0);
+              pixels[i].setRGB(140, 200, 0);
             }
           }
           
         }
         else {
           for (int i = 0; i < 15; i++) {
-            pixels[i].setRGB(0, 200, 0);
+            pixels[i].setRGB(0, 0, 200);
           }
         }
       }
       else {
         for (int i = 0; i < 10; i++) {
-          pixels[i].setRGB(0, 200, 0);
+          pixels[i].setRGB(0, 0, 200);
         }
       }
 
@@ -207,7 +207,7 @@ void Show_EQ(int arr[]) {
 
     else {
       for (int i = 0; i < 5; i++) {
-        pixels[i].setRGB(0, 200, 0);
+        pixels[i].setRGB(0, 0, 200);
       }
     }
   }
