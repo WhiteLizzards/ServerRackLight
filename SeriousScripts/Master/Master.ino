@@ -23,61 +23,99 @@ int Frequencies_Two[7];
 String message = "";
 int bass = 0;
 int snare = 0;
-int poti = 0;
+int potiBass = 200;
+int potiSnare = 300;
 
-// Declare Potentionmeter
-int potiPin = A0;
+int bassTrigger = 0;
+int snareTrigger = 0;
+
+// Dev variables
+bool usePoti = false;
+bool useAudioShield = true;
 
 void setup() {
-  /*
-  //Set Spectrum Shield pin configurations
-  pinMode(STROBE, OUTPUT);
-  pinMode(RESET, OUTPUT);
-  pinMode(DC_One, INPUT);
-  pinMode(DC_Two, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(STROBE, HIGH);
-  digitalWrite(RESET, HIGH);
-
-  //Initialize Spectrum Analyzers
-  digitalWrite(STROBE, LOW);
-  delay(1);
-  digitalWrite(RESET, HIGH);
-  delay(1);
-  digitalWrite(STROBE, HIGH);
-  delay(1);
-  digitalWrite(STROBE, LOW);
-  delay(1);
-  digitalWrite(RESET, LOW);
-  */
+  if (useAudioShield) {
+    //Set Spectrum Shield pin configurations
+    pinMode(STROBE, OUTPUT);
+    pinMode(RESET, OUTPUT);
+    pinMode(DC_One, INPUT);
+    pinMode(DC_Two, INPUT);
+    digitalWrite(STROBE, HIGH);
+    digitalWrite(RESET, HIGH);
   
+    //Initialize Spectrum Analyzers
+    digitalWrite(STROBE, LOW);
+    delay(1);
+    digitalWrite(RESET, HIGH);
+    delay(1);
+    digitalWrite(STROBE, HIGH);
+    delay(1);
+    digitalWrite(STROBE, LOW);
+    delay(1);
+    digitalWrite(RESET, LOW);
+  }
   Serial.begin(9600);
   Wire.begin(); // join i2c bus (address optional for master)
 }
 
 
 void loop() {
-  message = CreateDummyMessage();
-  //Read_Frequencies();
-  SendMessageToDevice(7, message);
-  SendMessageToDevice(8, message);
-  delay(500); 
+  // Check if we work with dummy or live data
+  if (useAudioShield) {
+    Read_Frequencies();
+    message = CreateLiveMessage();
+  }
+  else message = CreateBoolMessage();
+
+  // Send Message to slave devices
+  Serial.println(snare);
+  if (bassTrigger) {
+    SendMessageToDevice(7, message);
+    SendMessageToDevice(8, message);
+  }
+  delay(100); 
 }
 
 
 
 // Functions
-// Creates and return a string message with 3 random numbers
+
+// Creates and returns a string message with 3 random numbers
 String CreateDummyMessage() {
   bass = random(0, 1024);
   snare = random(0, 1024);
-  poti = random(0, 1024);
-  return (String)bass + "," + (String)snare + "," +  (String)poti + "C";
+  return (String)bass + "," + (String)snare + "," +  (String)potiBass + "," +  (String)potiSnare + "C";
+}
+
+// Creates and returns a string message with live data
+String CreateLiveMessage() {
+  bass = Frequencies_One[0];
+  snare = Frequencies_One[3];
+  if (usePoti) {
+    potiBass = analogRead(POTIPIN);
+    potiSnare = analogRead(POTIPIN);
+  }
+  if (bass >= potiBass) bassTrigger = 1;
+  else bassTrigger = 0;
+  if (snare >= potiSnare) snareTrigger = 1;
+  else snareTrigger = 0;
+  
+  //return (String)bass + "," + (String)snare + "," +  (String)potiBass + "," +  (String)potiSnare + "C";
+  return (String)snareTrigger;
+}
+
+String CreateBoolMessage() {
+  bass = random(0, 1024);
+  snare = random(0, 1024);
+  if (bass >= potiBass) bassTrigger = 1;
+  else bassTrigger = 0;
+  if (snare >= potiSnare) snareTrigger = 1;
+  else snareTrigger = 0;
+  return "A" + (String)bassTrigger + (String)snareTrigger;
 }
 
 // Reads in the Audio Signals and saves them into Frequencies_One
 void Read_Frequencies() {
-  // Read frequencies for each band
   for (freq_amp = 0; freq_amp < 7; freq_amp++) {
     Frequencies_One[freq_amp] = analogRead(DC_One);
     Frequencies_Two[freq_amp] = analogRead(DC_Two);
