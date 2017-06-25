@@ -15,19 +15,28 @@
 #define MAXPOSITIONS 51
 
 String command="";
-int bass, snare, potiBass, potiSnare;
+int bass = 0;
+int snare = 0;
+int potiMapValue = 0;
 
 CRGB pixels[NUMPIXELS];
 int mapNum = 0;
 
 // Arrays mit Volumegrenzen für EQ Effekt
-int calm[] = {20, 40, 60, 80, 100};
-//int loud[] = {80, 150, 200, 280, 300};
-int loud[] = {60, 100, 110, 120, 130, 140, 150, 160, 170, 180};
-int loud2[] = {160, 200, 250, 300, 350, 400, 450, 500, 550, 600}; //Laptop 2/3 lautstärke
-int loud3[] = {160, 210, 270, 330, 380, 440, 490, 550, 610, 660};
-int loud4[] = {500, 580, 680, 750, 800, 870, 930, 980, 1000, 1000};
+/*
+int threshold1[] = {80, 100, 120, 140, 160, 200, 240, 250, 300, 300};
+int threshold2[] = {120, 150, 180, 240, 280, 320, 350, 420, 450, 450}; //Laptop 2/3 lautstärke
+int threshold3[] = {200, 230, 250, 300, 380, 440, 490, 550, 610, 660};
+int threshold4[] = {500, 580, 680, 750, 800, 870, 930, 980, 1000, 1000};
+*/
 
+// Arrays mit Volumegrenzen für EQ Effekt
+int threshold1[] = {80, 140, 200, 250, 300, 350};
+int threshold2[] = {120, 150, 240, 320, 350, 450}; //Laptop 2/3 lautstärke
+int threshold3[] = {200, 250, 300, 440, 490, 550};
+int threshold4[] = {500, 580, 680, 800, 930, 1000};
+int threshold5[] = {500, 580, 680, 800, 930, 1000};
+int threshold6[] = {500, 580, 680, 800, 930, 1000};
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -40,8 +49,7 @@ void setup() {
 
 void loop() {
   Serial.println(bass);
-  
-  Show_EQ(loud4);
+  Show_EQ(potiMapValue);
   FastLED.show();
 }
 
@@ -56,92 +64,87 @@ void receiveEvent(int howMany) {
     command+=(char)Wire.read(); // receive byte as a character       // print the character
   }
   String tmp="";
-
-  for(int i=0; i<command.length();i++){
+  for(int i=0; i<command.length(); i++){
     if (command[i]=='C'){
-      if(count==0)bass=tmp.toInt();
-      else if(count==1)snare=tmp.toInt();
+      if(count==2) potiMapValue = tmp.toInt();
       count++;
-      tmp="";
+      tmp = "";
+    }
+    else if (command[i] == ',') {
+      if (count==0) bass = tmp.toInt();
+      else if (count==1) snare = tmp.toInt();
+      tmp = "";
+      count++;
     }
     else{
       tmp+=(char)command[i];
     }
   }
-  command="";
+  command = "";
 }
 
 // Shows the EQ on the LED stripe
-void Show_EQ(int arr[]) {
+void Show_EQ(int poti) {
+  int *arr;
+  switch (poti) {
+    case 1:
+      arr = threshold1;
+      break;
+    case 2:
+      arr = threshold2;
+      break;
+    case 3:
+      arr = threshold3;
+      break;
+    case 4:
+      arr = threshold4;
+      break;
+    case 5:
+      arr = threshold5;
+      break;
+    case 6:
+      arr = threshold6;
+      break;
+    default:
+      break;
+  }
   if (bass >= arr[0]) {
     if (bass >= arr[1]) {
       if (bass >= arr[2]) {
         if (bass >= arr[3]) {
           if (bass >= arr[4]) {
             if (bass >= arr[5]) {
-              if (bass >= arr[6]) {
-                if (bass >= arr[7]) {
-                  if (bass >= arr[8]) {
-                    if (bass >= arr[9]) {
-                      for (int i = 0; i < 50; i++) {
-                        pixels[i].setRGB(0, 0, 0);
-                      }
-                    }
-                    else {
-                      for (int i = 0; i < 45; i++) {
-                        pixels[i].setRGB(200, 0, 100);
-                      }
-                    }
-                  }
-                  else {
-                    for (int i = 0; i < 40; i++) {
-                      pixels[i].setRGB(200, 0, 100);
-                    }
-                  }
-                }
-                else {
-                  for (int i = 0; i < 35; i++) {
-                    pixels[i].setRGB(200, 0, 100);
-                  }
-                }
-              }
-              else {
-                for (int i = 0; i < 30; i++) {
-                  pixels[i].setRGB(200, 0, 100);
-                }
+             for (int i = 0; i < 50; i++) {
+                pixels[i].setRGB(200, 0, 0);
               }
             }
             else {
-              for (int i = 0; i < 25; i++) {
-                pixels[i].setRGB(200, 0, 100);
+              for (int i = 0; i < 50; i++) {
+                pixels[i].setRGB(200, 50, 0);
               }
             }
-            
           }
           else {
-            for (int i = 0; i < 20; i++) {
-              pixels[i].setRGB(200, 0, 100);
+            for (int i = 0; i < 40; i++) {
+              pixels[i].setRGB(200, 50, 0);
             }
           }
-          
         }
         else {
-          for (int i = 0; i < 15; i++) {
-            pixels[i].setRGB(200, 0, 100);
+          for (int i = 0; i < 30; i++) {
+            pixels[i].setRGB(200, 50, 0);
           }
         }
       }
       else {
-        for (int i = 0; i < 10; i++) {
-          pixels[i].setRGB(200, 0, 100);
+        for (int i = 0; i < 20; i++) {
+          pixels[i].setRGB(200, 50, 0);
         }
       }
-
     }
-
     else {
-      for (int i = 0; i < 5; i++) {
-        pixels[i].setRGB(200, 0, 100);
+      for (int i = 0; i < 10; i++) {
+        pixels[i].setRGB(200, 50, 0);
       }
     }
   }
@@ -150,6 +153,5 @@ void Show_EQ(int arr[]) {
       pixels[i].setRGB(0, 0, 0);
     }
   }
-  
 }
 

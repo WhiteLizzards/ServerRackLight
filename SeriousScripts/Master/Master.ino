@@ -23,14 +23,12 @@ int Frequencies_Two[7];
 String message = "";
 int bass = 0;
 int snare = 0;
-int potiBass = 200;
-int potiSnare = 300;
+int poti = 0;
+int potiMapValue = 0;
 
-int bassTrigger = 0;
-int snareTrigger = 0;
 
 // Dev variables
-bool usePoti = false;
+bool usePoti = true;
 bool useAudioShield = true;
 
 void setup() {
@@ -65,13 +63,13 @@ void loop() {
     Read_Frequencies();
     message = CreateLiveMessage();
   }
-  else message = CreateBoolMessage();
+  else message = CreateDummyMessage();
 
   // Send Message to slave devices
 
   SendMessageToDevice(6, message);
   SendMessageToDevice(8, message);
-  Serial.println(bass);
+  Serial.println(message);
   delay(50); 
 }
 
@@ -83,7 +81,8 @@ void loop() {
 String CreateDummyMessage() {
   bass = random(0, 1024);
   snare = random(0, 1024);
-  return (String)bass + "," + (String)snare + "," +  (String)potiBass + "," +  (String)potiSnare + "C";
+  potiMapValue = 2;
+  return (String)bass + "," + (String)snare + "," +  (String)potiMapValue + "C";
 }
 
 // Creates and returns a string message with live data
@@ -91,27 +90,12 @@ String CreateLiveMessage() {
   bass = Frequencies_One[0];
   snare = Frequencies_One[3];
   if (usePoti) {
-    potiBass = analogRead(POTIPIN);
-    potiSnare = analogRead(POTIPIN);
+    poti = analogRead(POTIPIN);
+    potiMapValue = map(poti, 0, 1023, 1, 6);
   }
-  if (bass >= potiBass) bassTrigger = 1;
-  else bassTrigger = 0;
-  if (snare >= potiSnare) snareTrigger = 1;
-  else snareTrigger = 0;
+  else potiMapValue = 2;
   
-  return (String)bass + "," + (String)snare + "C";
-  //return (String)snareTrigger;
-  //return (String)bass + "C";
-}
-
-String CreateBoolMessage() {
-  bass = random(0, 1024);
-  snare = random(0, 1024);
-  if (bass >= potiBass) bassTrigger = 1;
-  else bassTrigger = 0;
-  if (snare >= potiSnare) snareTrigger = 1;
-  else snareTrigger = 0;
-  return "A" + (String)bassTrigger + (String)snareTrigger;
+  return (String)bass + "," + (String)snare + "," + (String)potiMapValue + "C";
 }
 
 // Reads in the Audio Signals and saves them into Frequencies_One
