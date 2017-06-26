@@ -49,6 +49,7 @@ void setup() {
 
 void loop() {
   Serial.println(bass);
+  
   Show_EQ(potiMapValue);
   FastLED.show();
 }

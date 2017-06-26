@@ -28,7 +28,7 @@ int potiMapValue = 0;
 
 
 // Dev variables
-bool usePoti = true;
+bool usePoti = false;
 bool useAudioShield = true;
 
 void setup() {
@@ -91,9 +91,9 @@ String CreateLiveMessage() {
   snare = Frequencies_One[3];
   if (usePoti) {
     poti = analogRead(POTIPIN);
-    potiMapValue = map(poti, 0, 1023, 1, 6);
+    potiMapValue = map(poti, 0, 1023, 10, 20);
   }
-  else potiMapValue = 2;
+  else potiMapValue = 6;
   
   return (String)bass + "," + (String)snare + "," + (String)potiMapValue + "C";
 }

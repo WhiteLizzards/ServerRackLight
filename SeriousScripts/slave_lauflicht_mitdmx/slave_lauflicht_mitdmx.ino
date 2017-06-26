@@ -17,6 +17,7 @@ String command="";
 int bass = 0;
 int snare = 0;
 int potiMapValue = 0;
+float potiMapValueFloat = 0;
 CRGB leds[NUMPIXELS];
 
 void setup() {
@@ -31,7 +32,8 @@ int limit=0;
 bool led=false;
   bool triggerd= false;
 void loop() {
-
+    potiMapValueFloat = (float)(potiMapValue)/10;
+    Serial.println(potiMapValueFloat);
     for ( int i=MAXPOSITIONS-1;i>=0;i--){ //schaue in allen Positionen nach
       
       if (leds[i][0]+leds[i][1]+leds[i][2]>0){
