@@ -32,8 +32,7 @@ int limit=0;
 bool led=false;
   bool triggerd= false;
 void loop() {
-    potiMapValueFloat = (float)(potiMapValue)/10;
-    Serial.println(potiMapValueFloat);
+    Serial.println(bass);
     for ( int i=MAXPOSITIONS-1;i>=0;i--){ //schaue in allen Positionen nach
       
       if (leds[i][0]+leds[i][1]+leds[i][2]>0){
