@@ -11,6 +11,7 @@
 #include <avr/power.h>
 #endif
 #define PIN 6
+#define PIN2 10
 #define NUMPIXELS 50
 #define MAXPOSITIONS 51
 
@@ -42,6 +43,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PIN, OUTPUT);
   FastLED.addLeds<WS2811, PIN, RGB>(pixels, NUMPIXELS);
+  FastLED.addLeds<WS2811, PIN2, RGB>(pixels, NUMPIXELS);
   Wire.begin(8);                // join i2c bus with address #8
   Wire.onReceive(receiveEvent); // register event
   Serial.begin(9600);           // start serial for output

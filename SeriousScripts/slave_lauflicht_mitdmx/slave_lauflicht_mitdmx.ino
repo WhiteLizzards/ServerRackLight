@@ -2,6 +2,7 @@
 #include <FastLED.h>
 #include <Wire.h>
 const int ledPin =  6;      // the number of the LED pin
+const int ledPin2 = 10;
 const int i2c_adress =  6;      // die i2c Adress
 #define NUMPIXELS      MAXPOSITIONS+5      //Anzahl LEDs
 
@@ -24,6 +25,7 @@ void setup() {
   Serial.begin(9600);
   //DmxSimple.usePin(4);
   FastLED.addLeds<WS2811, ledPin, RGB>(leds, NUMPIXELS );
+  FastLED.addLeds<WS2811, ledPin2, RGB>(leds, NUMPIXELS );
   Wire.begin(i2c_adress);                // join i2c bus with address #8
   Wire.onReceive(receiveEvent); // register event
 }
