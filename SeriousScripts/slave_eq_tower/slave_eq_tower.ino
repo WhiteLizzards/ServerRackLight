@@ -18,7 +18,6 @@
 String command="";
 int bass = 0;
 int snare = 0;
-int potiMapValue = 0;
 
 CRGB pixels[NUMPIXELS];
 int mapNum = 0;
@@ -51,8 +50,7 @@ void setup() {
 
 void loop() {
   Serial.println(bass);
-  
-  Show_EQ(potiMapValue);
+  Show_EQ(threshold6);
   FastLED.show();
 }
 
@@ -69,13 +67,12 @@ void receiveEvent(int howMany) {
   String tmp="";
   for(int i=0; i<command.length(); i++){
     if (command[i]=='C'){
-      if(count==2) potiMapValue = tmp.toInt();
+      if (count==1) snare = tmp.toInt();
       count++;
       tmp = "";
     }
     else if (command[i] == ',') {
       if (count==0) bass = tmp.toInt();
-      else if (count==1) snare = tmp.toInt();
       tmp = "";
       count++;
     }
@@ -87,30 +84,7 @@ void receiveEvent(int howMany) {
 }
 
 // Shows the EQ on the LED stripe
-void Show_EQ(int poti) {
-  int *arr;
-  switch (poti) {
-    case 1:
-      arr = threshold1;
-      break;
-    case 2:
-      arr = threshold2;
-      break;
-    case 3:
-      arr = threshold3;
-      break;
-    case 4:
-      arr = threshold4;
-      break;
-    case 5:
-      arr = threshold5;
-      break;
-    case 6:
-      arr = threshold6;
-      break;
-    default:
-      break;
-  }
+void Show_EQ(int *arr) {
   if (bass >= arr[0]) {
     if (bass >= arr[1]) {
       if (bass >= arr[2]) {

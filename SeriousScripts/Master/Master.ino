@@ -18,17 +18,16 @@
 int freq_amp;
 int Frequencies_One[7];
 int Frequencies_Two[7];
+const int buttonPin = 2; 
 
 // Declare Message variables to send to slaves
 String message = "";
 int bass = 0;
 int snare = 0;
-int poti = 0;
-int potiMapValue = 0;
-
+int buttonState = 0;
 
 // Dev variables
-bool usePoti = false;
+bool useButton = true;
 bool useAudioShield = true;
 
 void setup() {
@@ -52,6 +51,7 @@ void setup() {
     delay(1);
     digitalWrite(RESET, LOW);
   }
+  if (useButton) pinMode(buttonPin, INPUT);
   Serial.begin(9600);
   Wire.begin(); // join i2c bus (address optional for master)
 }
@@ -73,29 +73,24 @@ void loop() {
   delay(50); 
 }
 
-
-
 // Functions
-
 // Creates and returns a string message with 3 random numbers
 String CreateDummyMessage() {
   bass = random(0, 1024);
   snare = random(0, 1024);
-  potiMapValue = 2;
-  return (String)bass + "," + (String)snare + "," +  (String)potiMapValue + "C";
+  return (String)bass + "," + (String)snare + "C";
 }
 
 // Creates and returns a string message with live data
 String CreateLiveMessage() {
   bass = Frequencies_One[0];
-  snare = Frequencies_One[3];
-  if (usePoti) {
-    poti = analogRead(POTIPIN);
-    potiMapValue = map(poti, 0, 1023, 10, 20);
+  if (useButton){
+    buttonState = digitalRead(buttonPin);
+    /*if (buttonState == HIGH)*/ snare = Frequencies_One[4];
+    //else snare = 0;
   }
-  else potiMapValue = 6;
-  
-  return (String)bass + "," + (String)snare + "," + (String)potiMapValue + "C";
+  else snare = 0;
+  return (String)bass + "," + (String)snare + "C";
 }
 
 // Reads in the Audio Signals and saves them into Frequencies_One

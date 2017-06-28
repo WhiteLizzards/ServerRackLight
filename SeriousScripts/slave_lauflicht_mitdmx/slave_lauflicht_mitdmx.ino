@@ -1,4 +1,3 @@
-//#include <DmxSimple.h>
 #include <FastLED.h>
 #include <Wire.h>
 const int ledPin =  6;      // the number of the LED pin
@@ -17,8 +16,6 @@ int multiplePosition[MAXPOSITIONS];
 String command="";
 int bass = 0;
 int snare = 0;
-int potiMapValue = 0;
-float potiMapValueFloat = 0;
 CRGB leds[NUMPIXELS];
 
 void setup() {
@@ -32,19 +29,19 @@ void setup() {
 int limit=0;
 
 bool led=false;
-  bool triggerd= false;
+bool triggerd= false;
+
 void loop() {
     Serial.println(bass);
     for ( int i=MAXPOSITIONS-1;i>=0;i--){ //schaue in allen Positionen nach
-      
       if (leds[i][0]+leds[i][1]+leds[i][2]>0){
-        if (snare>450) { 
+        // Licht für Snare
+        if (snare>500 && snare < 600) { 
           if (i >= MAXPOSITIONS-19) leds[i+1] = CRGB(255,0,0);
-          else leds[i+1] = CRGB(0,0,255);  
-           //leds[i+1] = CRGB(0,100,255); 
+          //else leds[i+1] = CRGB(0,0,255);  
+          else leds[i+1] = CRGB(255,255,255); 
         }
         else {
-            
          if (i >= MAXPOSITIONS-19) leds[i+1] = CRGB(255,0,0);
          else leds[i+1] = CRGB(0,0,255); 
         }
@@ -52,7 +49,6 @@ void loop() {
       }
     }
     if (bass>500) {
-
       leds[0] = CRGB(0,0,255);
       triggerd=false;
     }
@@ -74,13 +70,12 @@ void receiveEvent(int howMany) {
   String tmp="";
   for(int i=0; i<command.length(); i++){
     if (command[i]=='C'){
-      if(count==2) potiMapValue = tmp.toInt();
+      if (count==1) snare = tmp.toInt();
       count++;
       tmp = "";
     }
     else if (command[i] == ',') {
       if (count==0) bass = tmp.toInt();
-      else if (count==1) snare = tmp.toInt();
       tmp = "";
       count++;
     }
