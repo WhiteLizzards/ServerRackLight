@@ -90,38 +90,58 @@ void Show_EQ(int *arr) {
       if (bass >= arr[2]) {
         if (bass >= arr[3]) {
           if (bass >= arr[4]) {
+            // 5. Pegel
             if (bass >= arr[5]) {
              for (int i = 0; i < 50; i++) {
-                pixels[i].setRGB(200, 0, 0);
+                if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 37 && i < 40) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 43 && i < 46) pixels[i].setRGB(0, 0, 0);
+                else pixels[i].setRGB(200, 50, 0);
               }
             }
             else {
               for (int i = 0; i < 50; i++) {
-                pixels[i].setRGB(200, 50, 0);
+                if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 37 && i < 40) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 43 && i < 46) pixels[i].setRGB(0, 0, 0);
+                else pixels[i].setRGB(200, 50, 0);
               }
             }
           }
           else {
-            for (int i = 0; i < 40; i++) {
-              pixels[i].setRGB(200, 50, 0);
+            // 4. Pegel
+            for (int i = 0; i < 43; i++) {
+              if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
+              else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
+              else if (i >= 37 && i < 40) pixels[i].setRGB(0, 0, 0);
+              else pixels[i].setRGB(200, 50, 0);
             }
           }
         }
         else {
-          for (int i = 0; i < 30; i++) {
-            pixels[i].setRGB(200, 50, 0);
+          // 3. Pegel
+          for (int i = 0; i < 37; i++) {
+            if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
+            else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
+            else pixels[i].setRGB(200, 50, 0);
           }
         }
       }
       else {
-        for (int i = 0; i < 20; i++) {
-          pixels[i].setRGB(200, 50, 0);
+        // 2. Pegel
+        for (int i = 0; i < 31; i++) {
+          if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
+          else pixels[i].setRGB(200, 50, 0);
         }
       }
     }
     else {
-      for (int i = 0; i < 10; i++) {
-        pixels[i].setRGB(200, 50, 0);
+      // 1. Pegel
+      for (int i = 0; i < 25; i++) {
+        if (i < 21) pixels[i].setRGB(0, 0, 0);
+        else pixels[i].setRGB(200, 50, 0);
       }
     }
   }
