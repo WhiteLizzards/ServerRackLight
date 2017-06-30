@@ -92,56 +92,59 @@ void Show_EQ(int *arr) {
           if (bass >= arr[4]) {
             // 5. Pegel
             if (bass >= arr[5]) {
-             for (int i = 0; i < 50; i++) {
-                if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
-                else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
-                else if (i >= 37 && i < 40) pixels[i].setRGB(0, 0, 0);
-                else if (i >= 43 && i < 46) pixels[i].setRGB(0, 0, 0);
-                else pixels[i].setRGB(200, 50, 0);
+             for (int i = 0; i < 49; i++) {
+              
+                if (i < 19) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 23 && i < 26) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 30 && i < 32) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 36 && i < 39) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 43 && i < 45) pixels[i].setRGB(0, 0, 0);
+                
+                else pixels[i].setRGB(220, 50, 0);
               }
             }
             else {
-              for (int i = 0; i < 50; i++) {
-                if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
-                else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
-                else if (i >= 37 && i < 40) pixels[i].setRGB(0, 0, 0);
-                else if (i >= 43 && i < 46) pixels[i].setRGB(0, 0, 0);
-                else pixels[i].setRGB(200, 50, 0);
+              for (int i = 0; i < 49; i++) {
+                if (i < 19 || (i >= 23 && i < 26) ) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 30 && i < 32) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 36 && i < 39) pixels[i].setRGB(0, 0, 0);
+                else if (i >= 43 && i < 45) pixels[i].setRGB(0, 0, 0);
+                else pixels[i].setRGB(220, 50, 0);
               }
             }
           }
           else {
             // 4. Pegel
             for (int i = 0; i < 43; i++) {
-              if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
-              else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
-              else if (i >= 37 && i < 40) pixels[i].setRGB(0, 0, 0);
+              if (i < 19 || (i >= 23 && i < 26) ) pixels[i].setRGB(0, 0, 0);
+              else if (i >= 30 && i < 32) pixels[i].setRGB(0, 0, 0);
+              else if (i >= 36 && i < 39) pixels[i].setRGB(0, 0, 0);
               else pixels[i].setRGB(200, 50, 0);
             }
           }
         }
         else {
           // 3. Pegel
-          for (int i = 0; i < 37; i++) {
-            if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
-            else if (i >= 31 && i < 34) pixels[i].setRGB(0, 0, 0);
-            else pixels[i].setRGB(200, 50, 0);
+          for (int i = 0; i < 36; i++) {
+            if (i < 19 || (i >= 23 && i < 26) ) pixels[i].setRGB(0, 0, 0);
+            else if (i >= 30 && i < 32) pixels[i].setRGB(0, 0, 0);
+            else pixels[i].setRGB(180, 50, 0);
           }
         }
       }
       else {
         // 2. Pegel
-        for (int i = 0; i < 31; i++) {
-          if (i < 21 || (i >= 25 && i < 27) ) pixels[i].setRGB(0, 0, 0);
-          else pixels[i].setRGB(200, 50, 0);
+        for (int i = 0; i < 30; i++) {
+          if (i < 19 || (i >= 23 && i < 26) ) pixels[i].setRGB(0, 0, 0);
+          else pixels[i].setRGB(160, 80, 0);
         }
       }
     }
     else {
       // 1. Pegel
-      for (int i = 0; i < 25; i++) {
-        if (i < 21) pixels[i].setRGB(0, 0, 0);
-        else pixels[i].setRGB(200, 50, 0);
+      for (int i = 0; i < 23; i++) {
+        if (i < 19) pixels[i].setRGB(0, 0, 0);
+        else pixels[i].setRGB(140, 80, 0);
       }
     }
   }
