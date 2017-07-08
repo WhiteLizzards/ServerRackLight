@@ -36,20 +36,20 @@ void loop() {
     for ( int i=MAXPOSITIONS-1;i>=0;i--){ //schaue in allen Positionen nach
       if (leds[i][0]+leds[i][1]+leds[i][2]>0){
         // Licht für Snare
-        if (snare>500 && snare < 600) { 
-          if (i >= MAXPOSITIONS-17) leds[i+1] = CRGB(255,0,0);
-          else leds[i+1] = CRGB(0,0,255);  
-          //else leds[i+1] = CRGB(255,255,255); 
+        if (snare>500) { 
+          if (i >= MAXPOSITIONS-17) leds[i+1] = CRGB(200,0,0);
+          //else leds[i+1] = CRGB(0,0,160);  
+          else leds[i+1] = CRGB(160,160,160); 
         }
         else {
-         if (i >= MAXPOSITIONS-17) leds[i+1] = CRGB(255,0,0);
-         else leds[i+1] = CRGB(0,0,255); 
+         if (i >= MAXPOSITIONS-17) leds[i+1] = CRGB(200,0,0);
+         else leds[i+1] = CRGB(0,0,160); 
         }
         leds[i] = CRGB(0,0,0);
       }
     }
     if (bass>500) {
-      leds[0] = CRGB(0,0,255);
+      leds[0] = CRGB(0,0,160);
       triggerd=false;
     }
     

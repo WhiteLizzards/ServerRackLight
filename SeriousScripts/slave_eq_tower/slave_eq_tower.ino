@@ -37,6 +37,7 @@ int threshold3[] = {200, 250, 300, 440, 490, 550};
 int threshold4[] = {500, 580, 680, 800, 930, 1000};
 int threshold5[] = {500, 580, 680, 800, 930, 1000};
 int threshold6[] = {500, 580, 680, 800, 930, 1000};
+int threshold7[] = {400, 480, 580, 660, 750, 820};
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -50,7 +51,7 @@ void setup() {
 
 void loop() {
   Serial.println(bass);
-  Show_EQ(threshold6);
+  Show_EQ(threshold7);
   FastLED.show();
 }
 

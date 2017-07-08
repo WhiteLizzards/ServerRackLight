@@ -27,7 +27,7 @@ int snare = 0;
 int buttonState = 0;
 
 // Dev variables
-bool useButton = true;
+bool useButton = false;
 bool useAudioShield = true;
 
 void setup() {
